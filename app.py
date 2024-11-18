@@ -9,6 +9,25 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin123@127.0.0.1
 
 db.init_app(app)
 
+# -- ROUTES START --
+# UPDATE
+@app.route('/meal/<int:id_meal>', methods=['PUT'])
+def update_meal(id_meal):
+  meal = Meal.query.get(id_meal)
+  data = request.json
+
+  if meal:
+    meal.name = data.get("name")
+    meal.description = data.get("description")
+    meal.date_meal = data.get("date_meal")
+    meal.is_diet = data.get("is_diet")
+    db.session.commit()
+
+    return jsonify({"message":f"Refeição atualizada! {meal.to_dict()}"})
+  else:
+    return jsonify({"message":"Refeição não encontrada"}), 404
+
+# DELETE
 @app.route('/meal/<int:id_meal>', methods=['DELETE'])
 def delete_meal(id_meal):
   meal = Meal.query.get(id_meal)
@@ -19,7 +38,7 @@ def delete_meal(id_meal):
   else:
     return jsonify({"message":"Refeição não encontrada"}), 404
 
-
+# READ ALL
 @app.route('/meals', methods=['GET'])
 def read_all_meals():
   meals = Meal.query.all()
@@ -29,6 +48,7 @@ def read_all_meals():
   print(meals)
   return jsonify(response)
 
+# READ
 @app.route('/meal/<int:id_meal>', methods=['GET'])
 def read_meal(id_meal):
   meal = Meal.query.get(id_meal)
@@ -38,6 +58,7 @@ def read_meal(id_meal):
   else:
     return jsonify({"message":"Refeição não encontrada"}), 404
 
+# CREATE
 @app.route('/meal', methods=['POST'])
 def create_meal():
   
@@ -48,8 +69,6 @@ def create_meal():
   date_meal = data.get("date_meal")
   is_diet = data.get("is_diet")
 
-
-
   if name and description and date_meal:
     meal = Meal(name=name, description=description, date_meal=date_meal, is_diet=is_diet)
     db.session.add(meal)
@@ -59,9 +78,6 @@ def create_meal():
     return jsonify({"message":"Não foi possível adicionar a refeição. Por favor preencha todos os campos"}), 400
 
 
-@app.route('/hello-world/<name>', methods=['GET'])
-def hello_world(name):
-  return jsonify({ "message":f"Bem vindo, {name}"})
 
 if __name__ == '__main__':
   app.run(debug=True)
