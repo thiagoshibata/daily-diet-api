@@ -18,6 +18,15 @@ def read_all_meals():
   print(meals)
   return jsonify(response)
 
+@app.route('/meal/<int:id_meal>', methods=['GET'])
+def read_meal(id_meal):
+  meal = Meal.query.get(id_meal)
+  if meal:
+    return jsonify(meal.to_dict())
+  
+  else:
+    return jsonify({"message":"Refeição não encontrada"}), 404
+
 @app.route('/meal', methods=['POST'])
 def create_meal():
   
@@ -28,7 +37,7 @@ def create_meal():
   date_meal = data.get("date_meal")
   is_diet = data.get("is_diet")
 
-  
+
 
   if name and description and date_meal:
     meal = Meal(name=name, description=description, date_meal=date_meal, is_diet=is_diet)
