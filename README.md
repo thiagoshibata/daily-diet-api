@@ -1,6 +1,9 @@
 # daily-diet-api
 
-# Regras de Negócio:
+Desafio do módulo 4 do curso de Python pela Rocketseat.
+
+
+<h3>Regras de Negócio:</h3>
 
 - Deve ser possível registrar uma refeição feita, com as seguintes informações:
     - Nome
