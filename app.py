@@ -9,6 +9,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin123@127.0.0.1
 
 db.init_app(app)
 
+@app.route('/meal/<int:id_meal>', methods=['DELETE'])
+def delete_meal(id_meal):
+  meal = Meal.query.get(id_meal)
+  if meal:
+    db.session.delete(meal)
+    db.session.commit()
+    return jsonify({"message":f"Refeição {id_meal}, deletada com sucesso!"})
+  else:
+    return jsonify({"message":"Refeição não encontrada"}), 404
+
+
 @app.route('/meals', methods=['GET'])
 def read_all_meals():
   meals = Meal.query.all()
