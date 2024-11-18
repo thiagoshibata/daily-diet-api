@@ -16,11 +16,19 @@ def update_meal(id_meal):
   meal = Meal.query.get(id_meal)
   data = request.json
 
+  name = data.get("name")
+  description = data.get("description")
+  date_meal = data.get("date_meal")
+  is_diet = data.get("is_diet")
+
+  if not name or not description or not date_meal:
+    return jsonify({"message":"Não foi possível adicionar a refeição. Por favor preencha todos os campos"}), 400
+
   if meal:
-    meal.name = data.get("name")
-    meal.description = data.get("description")
-    meal.date_meal = data.get("date_meal")
-    meal.is_diet = data.get("is_diet")
+    meal.name = name
+    meal.description = description
+    meal.date_meal = date_meal
+    meal.is_diet = is_diet
     db.session.commit()
 
     return jsonify({"message":f"Refeição atualizada! {meal.to_dict()}"})
